@@ -14,6 +14,8 @@ export default function Login() {
   const [resending, setResending] = useState(false);
 
   useEffect(() => {
+    const requestedMode = new URLSearchParams(window.location.search).get("mode");
+    if (requestedMode === "signup") setMode("signup");
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) router.replace("/dashboard");
     });
