@@ -103,31 +103,37 @@ export default function ClientPage() {
     await load();
   }
 
-  return <>
-    <p><Link href="/dashboard">← Back to clients</Link></p>
-    <p className="section-kicker">CLIENT WORKSPACE</p>
-    <h1>{client ? client.name : "Loading…"}</h1>
-    {client && <p className="muted">{client.email}</p>}
+  return <div className="workspace-page"><div className="workspace-container">
+    <Link className="workspace-back" href="/dashboard">← Back to clients</Link>
+    <header className="workspace-header">
+      <div>
+        <p className="section-kicker">CLIENT WORKSPACE</p>
+        <h1>{client ? client.name : "Loading…"}</h1>
+        {client && <p className="muted">{client.email}</p>}
+      </div>
+    </header>
 
-    <form onSubmit={upload} className="card" style={{ marginTop: 20 }}>
-      <h2 style={{ marginTop: 0 }}>Upload a monthly report</h2>
-      <label htmlFor="month">Reporting month</label>
-      <input id="month" type="month" required value={month} onChange={(e) => setMonth(e.target.value)} />
-      <label htmlFor="pdf">PDF file</label>
-      <input id="pdf" type="file" accept="application/pdf" required onChange={(e) => setFile(e.target.files?.[0] || null)} />
-      <div style={{ marginTop: 16 }}><button disabled={busy}>{busy ? "Working…" : "Upload report"}</button></div>
+    <form onSubmit={upload} className="card">
+      <h2>Upload a monthly report</h2>
+      <div className="workspace-form-grid">
+        <div><label htmlFor="month">Reporting month</label>
+          <input id="month" type="month" required value={month} onChange={(e) => setMonth(e.target.value)} /></div>
+        <div><label htmlFor="pdf">PDF file</label>
+          <input className="workspace-file-input" id="pdf" type="file" accept="application/pdf" required onChange={(e) => setFile(e.target.files?.[0] || null)} /></div>
+      </div>
+      <div className="workspace-form-actions"><button disabled={busy}>{busy ? "Working…" : "Upload report"}</button></div>
     </form>
 
     {msg && <p className={msg.type}>{msg.text}</p>}
-    <h2>Report history</h2>
+    <h2 className="workspace-section-title">Report history <span>({reports.length})</span></h2>
     {reports.length === 0
-      ? <p className="muted">No reports yet. Upload the first PDF above.</p>
-      : <ul className="list">{reports.map((report) => <li key={report.id}>
+      ? <div className="workspace-empty">No reports yet. Upload the first PDF above.</div>
+      : <ul className="workspace-list">{reports.map((report) => <li key={report.id}>
           <div><strong>{report.month}</strong><div className="muted">{report.file_name}</div></div>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div className="workspace-actions">
             <button type="button" className="ghost" onClick={() => download(report)} disabled={busy}>Download</button>
             <button type="button" className="ghost" onClick={() => remove(report)} disabled={busy}>Delete</button>
           </div>
         </li>)}</ul>}
-  </>;
+  </div></div>;
 }
