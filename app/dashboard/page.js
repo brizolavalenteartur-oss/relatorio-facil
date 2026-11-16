@@ -84,39 +84,41 @@ export default function Dashboard() {
 
   if (!ready) return null;
 
-  return <>
-    <div className="row">
+  return <div className="workspace-page"><div className="workspace-container">
+    <header className="workspace-header">
       <div>
         <p className="section-kicker">REPORTDROP WORKSPACE</p>
         <h1>Your clients</h1>
         <p className="muted">Manage client details and monthly reports in one place.</p>
       </div>
-      <button className="ghost" onClick={logout}>Log out</button>
-    </div>
+      <button type="button" className="ghost" onClick={logout}>Log out</button>
+    </header>
 
-    <form onSubmit={saveClient} className="card" style={{ marginTop: 20 }}>
-      <h2 style={{ marginTop: 0 }}>{editingId ? "Edit client" : "Add a client"}</h2>
-      <label htmlFor="name">Business name</label>
-      <input id="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Acme Consulting" />
-      <label htmlFor="email">Client email</label>
-      <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="client@company.com" />
-      <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
+    <form onSubmit={saveClient} className="card">
+      <h2>{editingId ? "Edit client" : "Add a client"}</h2>
+      <div className="workspace-form-grid">
+        <div><label htmlFor="name">Business name</label>
+          <input id="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Acme Consulting" /></div>
+        <div><label htmlFor="email">Client email</label>
+          <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="client@company.com" /></div>
+      </div>
+      <div className="workspace-form-actions">
         <button disabled={busy}>{busy ? "Saving…" : editingId ? "Save changes" : "Add client"}</button>
         {editingId && <button type="button" className="ghost" onClick={cancelEdit}>Cancel</button>}
       </div>
     </form>
 
     {error && <p className="error">{error}</p>}
-    <h2>Client list <span className="muted">({clients.length})</span></h2>
+    <h2 className="workspace-section-title">Client list <span>({clients.length})</span></h2>
     {clients.length === 0
-      ? <p className="muted">No clients yet. Add your first client above.</p>
-      : <ul className="list">{clients.map((c) => <li key={c.id}>
+      ? <div className="workspace-empty">No clients yet. Add your first client above.</div>
+      : <ul className="workspace-list">{clients.map((c) => <li key={c.id}>
           <div><Link href={"/clients/" + c.id}>{c.name}</Link><div className="muted">{c.email}</div></div>
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <div className="workspace-actions">
             <button type="button" className="ghost" onClick={() => startEdit(c)}>Edit</button>
             <button type="button" className="ghost" onClick={() => deleteClient(c)}>Delete</button>
-            <Link className="btn ghost" href={"/clients/" + c.id}>Open workspace →</Link>
+            <Link className="btn" href={"/clients/" + c.id}>Open workspace <span aria-hidden="true">→</span></Link>
           </div>
         </li>)}</ul>}
-  </>;
+  </div></div>;
 }
